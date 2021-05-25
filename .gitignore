@@ -1,3 +1,5 @@
-converted/*
+converted/
 node_modules/
 config/
+rand.*
+sample.*

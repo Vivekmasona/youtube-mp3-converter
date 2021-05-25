@@ -13,7 +13,8 @@
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "python-shell": "^3.0.0"
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",
