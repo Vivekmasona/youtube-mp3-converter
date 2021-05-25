@@ -1,7 +1,7 @@
 from youtube_dl import YoutubeDL
-import ffmpeg
 import os
 import time
+import sys 
 
 # config
 HOME_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -9,22 +9,27 @@ temp_folder = 'temp_files'
 destination = 'converted'
 video_links_file = 'video_links.txt'
 
-yt_opt = {
-    'format':'bestaudio',
-    'outtmpl': '{}/{}/%(title)s.%(ext)s'.format(HOME_DIR, temp_folder)
-}
-
-f = open(video_links_file, 'r')
+# get link from sys arguments
+links_path = os.path.join(HOME_DIR, video_links_file)
+f = open(links_path, 'r')
 links = [g.rstrip() for g in f.readlines()]
 undownloaded_links = []
 
 # make temp dir for storing temp files
 temp_path = os.path.join(HOME_DIR, temp_folder)
-os.mkdir(temp_path)
+if not os.path.exists(temp_path):
+    os.mkdir(temp_path)
 
 # make dir for storing converted files, if not already present
-if not os.path.exists(os.path.join(HOME_DIR, destination)):
-    os.mkdir(os.path.join(HOME_DIR, destination))
+destination_path = os.path.join(HOME_DIR, destination)
+if not os.path.exists(destination_path):
+    os.mkdir(destination_path)
+
+# options dict for youtube_dl
+yt_opt = {
+    'format':'bestaudio',
+    'outtmpl': '{}'.format(os.path.join(temp_path, '%(title)s.%(ext)s'))
+}
 
 # get files
 for link in links:
@@ -38,11 +43,13 @@ for link in links:
     time.sleep(2)
 
 # convert these files to mp3
-for temp_file in os.listdir(temp_folder):
+for temp_file in os.listdir(temp_path):
     try:
         filename = ".".join(temp_file.split('.')[:-1]) + '.mp3'
-        os.system('ffmpeg -i "{}/{}" "{}/{}" -y'.format(temp_folder, temp_file, destination, filename))
-        os.remove('{}/{}'.format(temp_folder, temp_file))
+        old_path = os.path.join(temp_path, temp_file)
+        new_path = os.path.join(destination_path, filename)
+        os.system('ffmpeg -i "{}" "{}" -y'.format(old_path, new_path))
+        os.remove('{}'.format(old_path))
     except:
         print('Error in conversion!')
 
@@ -50,5 +57,5 @@ for temp_file in os.listdir(temp_folder):
 os.rmdir(temp_path)
 
 # write all the undownloaded links in the file
-with open(video_links_file, 'w') as f:
+with open(links_path, 'w') as f:
     f.write("\n".join(undownloaded_links))
