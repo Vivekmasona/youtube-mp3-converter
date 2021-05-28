@@ -2,8 +2,9 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const { PythonShell } = require('python-shell');
 const { promises: Fs } = require('fs')
+
+const pythonConverter = require('../util/pythonConverter');
 
 const router = express.Router();
 
@@ -16,26 +17,15 @@ router.get('/convert', async (req, res) => {
     
     try {
         const link = req.body.link;
-        const python_script_location = path.join(__dirname, '..', 'python_script', 'get-video-audio.py');
-        // call python script
-        const pythonOptions = {
-            mode: 'json',
-            // scriptPath: '/some/location/small_script.py',
-            // pythonPath: '/usr/bin/python3',
-            args: [link]
-        };
-        const pyshell = new PythonShell(python_script_location, pythonOptions);
-        pyshell.on('message', function (message) {
-            pythonData = message
-        });
-        pyshell.end(function (err) {
-            if (err) {
-                throw err
+        // encode the name for easy access
+        pythonConverter({ link }, ({data, error}) => {
+            if(data) {
+                res.send(data);
             }
-            const token = jwt.sign({ _name: pythonData.title }, process.env.AUTH_STRING);
-            // Send this to the user
-            res.send({ data:  pythonData, token })
-        });
+            if(error) {
+                res.status(400).send(error)
+            }
+        })        
     } catch (error) {
         res.status(400).send({error: error.message})
     }   
