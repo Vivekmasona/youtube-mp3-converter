@@ -14,7 +14,6 @@ router.get('/', async (req, res) => {
 
 // route to send youtube link and download it on local server
 router.get('/convert', async (req, res) => {
-    
     try {
         const link = req.body.link;
         // encode the name for easy access
@@ -44,7 +43,7 @@ router.get('/download', async (req, res) => {
     let decoded;
     try {
         decoded = jwt.verify(token, process.env.AUTH_STRING);
-        file_path = path.join(CONVERTED_DIR, `${decoded._name}.mp3`);
+        file_path = path.join(CONVERTED_DIR, `${token}.mp3`);
         await Fs.access(file_path); 
     } catch (error) {
         res.status(400).send({ error: 'File not found on server', message: error.message });
