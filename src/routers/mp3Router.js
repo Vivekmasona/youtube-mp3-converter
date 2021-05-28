@@ -22,7 +22,7 @@ router.get('/convert', async (req, res) => {
                 res.send(data);
             }
             if(error) {
-                res.status(400).send(error)
+                throw error
             }
         })        
     } catch (error) {

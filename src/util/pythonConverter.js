@@ -7,17 +7,16 @@ const pythonConverter = ({ link }, callback) => {
     const regex = 'v=[a-zA-Z0-9_]*';
     const link_regex = link.match(regex);
     if(!link_regex) {
-        callback({ error: 'Link not proper' });
+        callback({ error: new Error('Link not proper') });
     }
     const id = link_regex[0].replace('v=', '');
     let video_title;
     getYoutubeTitle(id, function (err, title) {
         if(err) {
-            callback({ error: 'Youtube video not available' });
+            callback({ error: new Error('Youtube video not available') });
         }
         video_title = title;
     });
-
     // script to download and convert video
     const python_script_location = path.join(__dirname, '..', 'python_script', 'get-video-audio.py');
     // convert title to token for easy access
@@ -36,7 +35,7 @@ const pythonConverter = ({ link }, callback) => {
     });
     pyshell.end(function (err) {
         if (err) {
-            callback({ error: err })
+            callback({ error: new Error(err) })
         }
         // Send this to the user
         callback({ data: pythonData })
