@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const contentDisposition = require('content-disposition');
 const { promises: Fs } = require('fs')
 
 const pythonConverter = require('../util/pythonConverter');
@@ -49,7 +50,7 @@ router.get('/download', async (req, res) => {
     }
     const stat = fs.statSync(file_path);
     res.writeHead(200, {
-        'Content-Disposition': `attachment; filename="${decoded._name}.mp3"`,
+        'Content-Disposition': contentDisposition(`${decoded._name}.mp3`),
         'Content-Type': 'audio/mp3',
         'Content-Length': stat.size,
     });
