@@ -18,14 +18,19 @@ router.get('/convert', async (req, res) => {
         const link = req.body.link;
         // encode the name for easy access
         pythonConverter({ link }, ({data, error}) => {
+            console.log('Callback called!')
             if(data) {
+                console.log('Data is here')
                 res.send(data);
+                return;
             }
             if(error) {
-                throw error
+                console.log(error.message)
+                throw error;
             }
-        })        
+        })  ;     
     } catch (error) {
+        console.log('Error caught!!')
         res.status(400).send({error: error.message})
     }   
 });
