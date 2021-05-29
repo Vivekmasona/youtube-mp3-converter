@@ -14,25 +14,18 @@ router.get('/', async (req, res) => {
 
 // route to send youtube link and download it on local server
 router.get('/convert', async (req, res) => {
-    try {
-        const link = req.body.link;
-        // encode the name for easy access
-        pythonConverter({ link }, ({data, error}) => {
-            console.log('Callback called!')
-            if(data) {
-                console.log('Data is here')
-                res.send(data);
-                return;
-            }
-            if(error) {
-                console.log(error.message)
-                throw error;
-            }
-        })  ;     
-    } catch (error) {
-        console.log('Error caught!!')
-        res.status(400).send({error: error.message})
-    }   
+    const link = req.body.link;
+    // encode the name for easy access
+    pythonConverter({ link }, ({data, error}) => {
+        if(data) {
+            res.send(data);
+            return;
+        }
+        else if(error) {
+            res.status(400).send({ error });
+            return;
+        }
+    });      
 });
 
 // route to download a specific file from the server
