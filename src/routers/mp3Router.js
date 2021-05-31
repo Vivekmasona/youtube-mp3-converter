@@ -30,7 +30,7 @@ router.get('/convert', async (req, res) => {
 
 // route to download a specific file from the server
 router.get('/download', async (req, res) => {
-    const CONVERTED_DIR = path.join(__dirname, '..', 'python_script', 'converted');
+    const CONVERTED_DIR = path.join(__dirname, '..', 'converted');
     // token received from server
     const token = req.body.token;
     if(!token) {

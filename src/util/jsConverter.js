@@ -1,7 +1,8 @@
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
-const path = require('path');
 const jwt = require('jsonwebtoken');
+const path = require('path');
+const fs = require('fs');
 
 // function to convert callback ffmpeg into Promise based
 const ffmpegSync = (stream, info, storage_location) => {
@@ -23,9 +24,14 @@ const ffmpegSync = (stream, info, storage_location) => {
 
 const jsConverter = async (link) => {
     const info = await ytdl.getInfo(link, { quality: 'highestaudio' });
+
+    const converted_folder = path.join(__dirname, '..', 'converted');
+    if (!fs.existsSync(converted_folder)) {
+        fs.mkdirSync(converted_folder)
+    }
     // making unique jwt token for storage
     const token = jwt.sign({ _name: info['player_response']['videoDetails']['title'] }, process.env.AUTH_STRING);
-    const storage_location = path.join(__dirname, '..', 'python_script', 'converted', `${token}.mp3`);
+    const storage_location = path.join(converted_folder, `${token}.mp3`);
 
     // downloading and converting to mp3
     const stream = ytdl.downloadFromInfo(info, {
