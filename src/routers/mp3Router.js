@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 const contentDisposition = require('content-disposition');
 const { promises: Fs } = require('fs')
 
-const pythonConverter = require('../util/pythonConverter');
+// const pythonConverter = require('../util/pythonConverter');
+const jsConverter = require('../util/jsConverter');
 
 const router = express.Router();
 
@@ -15,18 +16,16 @@ router.get('/', async (req, res) => {
 
 // route to send youtube link and download it on local server
 router.get('/convert', async (req, res) => {
-    const link = req.body.link;
-    // encode the name for easy access
-    pythonConverter({ link }, ({data, error}) => {
-        if(data) {
-            res.send(data);
-            return;
+    try {
+        const link = req.body.link;  
+        if(!link) {
+            throw new Error('Link not provided!');
         }
-        else if(error) {
-            res.status(400).send({ error });
-            return;
-        }
-    });      
+        const response = await jsConverter(link);
+        res.send(response);
+    } catch (error) {
+        res.status(400).send({ error: error.message });
+    }
 });
 
 // route to download a specific file from the server
