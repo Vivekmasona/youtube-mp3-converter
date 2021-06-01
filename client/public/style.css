@@ -1,0 +1,19 @@
+.main {
+    margin: auto;
+    width: 50%;
+    margin-top: 10%;
+    border: 2px solid blue;
+    padding: 3%;
+}
+
+.input-component {
+    display: flex;
+}
+
+.add-new-input {
+    margin-top: 1%;
+    padding: 1%;
+    background-color: darkgoldenrod;
+    width: 20%;
+    cursor: pointer;
+}
