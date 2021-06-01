@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import {lodash, throttle} from 'lodash'
+import { Queue } from "dynamic-queue";
 
 import convert from '../actions/convert';
 import download from '../actions/download';
 
-const InputComponent = () => {
+
+const InputComponent = ({ index, requestQueue }) => {
     const [link, setLink] = useState('');
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(false);
 
+
     const onConvertClick = async (e) => {
         e.preventDefault();
-
+        console.log(`Started converting Video ${index} at ${getTime()}`)
         setLoading(true);
-        const { data, error } = await convert(link);
+        const { data, error } = await convert({ link, index });
         setLoading(false);
         
         if(error) {
@@ -21,7 +25,6 @@ const InputComponent = () => {
             return;
         }
         setToken(data.token)
-        console.log(data.meta)
     };
 
     const onDownloadClick = async (e) => {
@@ -42,6 +45,32 @@ const InputComponent = () => {
         link.remove();
     }
 
+    const delayFunctionByOneSecond = async (fn, e) => {
+        requestQueue.push((next) => {
+            setTimeout(async () => {
+                await fn(e)
+                next();
+            }, 1000)
+        });
+    }
+
+    const getTime = () => {
+        var currentdate = new Date(); 
+        var datetime = currentdate.getDate() + "/"
+                        + (currentdate.getMonth()+1)  + "/" 
+                        + currentdate.getFullYear() + " @ "  
+                        + currentdate.getHours() + ":"  
+                        + currentdate.getMinutes() + ":" 
+                        + currentdate.getSeconds();
+        return datetime
+    }
+
+    const demoFn = () => {
+        const datetime = getTime();
+        console.log(index, datetime)
+    }
+    // const demoFnThrottled = throttle(demoFn, 1000)
+
     return(
         <div className="input-component">
             <input 
@@ -53,7 +82,7 @@ const InputComponent = () => {
                 required
             />
             <button
-                onClick={onConvertClick}
+                onClick={(e) =>  delayFunctionByOneSecond(onConvertClick, e)}
                 id="convert-button"
                 disabled={!!token}
             >
@@ -76,6 +105,11 @@ const InputComponent = () => {
                     </div>
                 ) : null
             }
+            <button
+                onClick={(e) => delayFunctionByOneSecond(demoFn, e)}
+            >
+                Demo
+            </button>
         </div>
     );
 };

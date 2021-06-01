@@ -7,6 +7,7 @@ const { promises: Fs } = require('fs')
 
 // const pythonConverter = require('../util/pythonConverter');
 const jsConverter = require('../util/jsConverter');
+const getTime = require('../util/getTime');
 
 const router = express.Router();
 
@@ -17,12 +18,13 @@ router.get('/', async (req, res) => {
 // route to send youtube link and download it on local server
 router.post('/convert', async (req, res) => {
     try {
-        const link = req.body.link; 
-        console.log(req.body) 
+        const { link, index } = req.body; 
         if(!link) {
             throw new Error('Link not provided!');
         }
-        const response = await jsConverter(link);
+        
+        const response = await jsConverter(link, index);
+        console.log('Finished')
         res.send(response);
     } catch (error) {
         res.status(400).send({ error: error.message });
@@ -40,7 +42,6 @@ router.post('/download', async (req, res) => {
     }
     let file_path;
     let decoded;
-    console.log(token)
     try {
         decoded = jwt.verify(token, process.env.AUTH_STRING);
         file_path = path.join(CONVERTED_DIR, `${token}.mp3`);

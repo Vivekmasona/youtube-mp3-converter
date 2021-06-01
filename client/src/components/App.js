@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Queue } from "dynamic-queue";
 
 import InputComponent from './InputComponent';
 
@@ -7,11 +8,15 @@ const App = () => {
     
     const [inputList, setInputList] = useState([0]);
 
+    const requestQueue = new Queue((next) => {
+        next();
+    });
+
     const renderInputList = () => {
         return inputList.map((input, index) => {
             return(
                 <div>
-                    <InputComponent key={index}/>
+                    <InputComponent key={index} index={index} requestQueue={requestQueue}/>
                 </div>
             );
         })
@@ -20,7 +25,6 @@ const App = () => {
     const addNewInput = (e) => {
         e.preventDefault();
         setInputList([...inputList, 0]);
-        console.log(inputList)
     }
 
     return(

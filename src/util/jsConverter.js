@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
 
+const getTime = require('./getTime');
+
 // function to convert callback ffmpeg into Promise based
 const ffmpegSync = (stream, info, storage_location) => {
     return new Promise((resolve, reject) => {
@@ -22,7 +24,8 @@ const ffmpegSync = (stream, info, storage_location) => {
     })
 };
 
-const jsConverter = async (link) => {
+const jsConverter = async (link, index) => {
+    console.log(`Video ${index} started download at ${getTime()}`)
     const info = await ytdl.getInfo(link, { quality: 'highestaudio' });
 
     const converted_folder = path.join(__dirname, '..', 'converted');
@@ -37,6 +40,7 @@ const jsConverter = async (link) => {
     const stream = ytdl.downloadFromInfo(info, {
         quality: 'highestaudio'
     });  
+    console.log(`Video ${index} finished at ${getTime()}`)
     const response = await ffmpegSync(stream, info, storage_location);
     return { meta: info['player_response']['videoDetails'], token };
 };
