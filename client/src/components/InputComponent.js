@@ -17,14 +17,18 @@ const InputComponent = ({ index, requestQueue }) => {
         e.preventDefault();
         console.log(`Started converting Video ${index} at ${getTime()}`)
         setLoading(true);
-        const { data, error } = await convert({ link, index });
-        setLoading(false);
-        
-        if(error) {
-            console.log(error);
-            return;
-        }
-        setToken(data.token)
+        convert({ link, index })
+            .then(({ data, error }) => {
+                setLoading(false);
+                if(error) {
+                    console.log(error);
+                    return;
+                }
+                setToken(data.token)
+            })
+            .catch((err) => {
+                console.log(err)
+            });
     };
 
     const onDownloadClick = async (e) => {
@@ -50,7 +54,7 @@ const InputComponent = ({ index, requestQueue }) => {
             setTimeout(async () => {
                 await fn(e)
                 next();
-            }, 1000)
+            }, 2000)
         });
     }
 
