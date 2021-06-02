@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import { green } from '@material-ui/core/colors';
 
 import download from '../actions/download';
 
@@ -27,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1)
     },
     cover: {
-        // width: 121,
         width: '100%',
         height: '100%'
     },
@@ -37,6 +37,13 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         paddingLeft: theme.spacing(1),
         paddingBottom: theme.spacing(1),
+    },
+    green: {
+        color: theme.palette.getContrastText(green[500]),
+        backgroundColor: green[500],
+        '&:hover': {
+          backgroundColor: green[700],
+        },
     },
 }));
 
@@ -91,7 +98,7 @@ const DownloadComponent = ({meta, token}) => {
                         <div className={classes.controls}>
                             <Button 
                                 variant="contained" 
-                                color="primary"
+                                className={classes.green}
                                 onClick={onDownloadClick}
                                 id="download-button"
                                 size="small"

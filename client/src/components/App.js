@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import { Queue } from "dynamic-queue";
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
-import { Queue } from "dynamic-queue";
+import Button from '@material-ui/core/Button';
+
 
 import InputComponent from './InputComponent';
 
 const useStyles = makeStyles((theme) => ({
     middle: {
       marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(4),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
@@ -30,8 +33,8 @@ const App = () => {
     const renderInputList = () => {
         return inputList.map((input, index) => {
             return(
-                <div>
-                    <InputComponent key={index} index={index} requestQueue={requestQueue}/>
+                <div key={index}>
+                    <InputComponent requestQueue={requestQueue}/>
                 </div>
             );
         })
@@ -49,12 +52,13 @@ const App = () => {
             <div className={classes.middle}>
                 <h1>Add Links</h1>
                 {renderInputList()}
-                <div 
-                    className="add-new-input"
+                <Button 
                     onClick={addNewInput}
+                    variant="contained" 
+                    color="secondary"
                 >
                     Add New Link
-                </div>
+                </Button>
             </div>
         </Container>
       </React.Fragment>

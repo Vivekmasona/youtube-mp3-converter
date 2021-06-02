@@ -7,7 +7,6 @@ const { promises: Fs } = require('fs')
 
 // const pythonConverter = require('../util/pythonConverter');
 const jsConverter = require('../util/jsConverter');
-const getTime = require('../util/getTime');
 
 const router = express.Router();
 
@@ -23,8 +22,7 @@ router.post('/convert', async (req, res) => {
             throw new Error('Link not provided!');
         }
         
-        const response = await jsConverter(link, index);
-        console.log('Finished')
+        const response = await jsConverter(link);
         res.send(response);
     } catch (error) {
         res.status(400).send({ error: error.message });
