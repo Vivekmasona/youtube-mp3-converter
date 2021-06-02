@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
+import { Queue } from "dynamic-queue";
 
 import InputComponent from './InputComponent';
 
@@ -22,11 +23,15 @@ const App = () => {
     const [inputList, setInputList] = useState([0]);
     const classes = useStyles();
 
+    const requestQueue = new Queue((next) => {
+        next();
+    });
+
     const renderInputList = () => {
         return inputList.map((input, index) => {
             return(
                 <div>
-                    <InputComponent key={index}/>
+                    <InputComponent key={index} index={index} requestQueue={requestQueue}/>
                 </div>
             );
         })
@@ -35,7 +40,6 @@ const App = () => {
     const addNewInput = (e) => {
         e.preventDefault();
         setInputList([...inputList, 0]);
-        console.log(inputList)
     }
 
     return(

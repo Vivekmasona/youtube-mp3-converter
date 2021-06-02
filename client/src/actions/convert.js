@@ -1,9 +1,10 @@
 import { axiosObj } from '../util/axios';
 
-const convert = async (link) => {
+const convert = async ({ link,index }) => {
     try {
         const response = await axiosObj.post('/convert', {
-            link
+            link,
+            index
         });
         return { data: response.data };
     } catch (error) {
