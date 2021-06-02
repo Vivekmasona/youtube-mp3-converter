@@ -1,82 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 
-import convert from '../actions/convert';
-import download from '../actions/download';
+import Container from '@material-ui/core/Container';
+
+import DownloadComponent from './DownloadComponent';
+import ConvertComponent from './ConvertComponent';
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        width: theme.spacing(60),
+        marginBottom: theme.spacing(1)
+    }
+}));
 
 const InputComponent = () => {
     const [link, setLink] = useState('');
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [meta, setMeta] = useState({});
 
-    const onConvertClick = async (e) => {
-        e.preventDefault();
-
-        setLoading(true);
-        const { data, error } = await convert(link);
-        setLoading(false);
-        
-        if(error) {
-            console.log(error);
-            return;
-        }
-        setToken(data.token)
-        console.log(data.meta)
-    };
-
-    const onDownloadClick = async (e) => {
-        e.preventDefault();
-        const { response, error } = await download(token);
-        if(error) {
-            console.log(error);
-            return;
-        }
-        const filename =  response.headers['content-disposition'].split('filename=')[1];
-
-        const url = window.URL.createObjectURL(new Blob([response.data]), { type: 'audio/mp3' });
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', filename.slice(1,-1));
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-    }
+    const classes = useStyles();
 
     return(
-        <div className="input-component">
-            <input 
-                type="text" 
-                id="link"
-                placeholder="Youtube link" 
-                value={link}
-                onChange={ (e) => setLink(e.target.value) }
-                required
-            />
-            <button
-                onClick={onConvertClick}
-                id="convert-button"
-                disabled={!!token}
-            >
-                Convert
-            </button>
+        <Container className={classes.root}>
             {
-                token ? (
-                    <button
-                        onClick={onDownloadClick}
-                        id="download-button"
-                    >
-                        Download
-                    </button>
-                ) : null
+                !token ? 
+                <ConvertComponent 
+                    loading={loading}
+                    token={token}
+                    link={link}
+                    setToken={setToken}
+                    setLink={setLink}
+                    setLoading={setLoading}
+                    setMeta={setMeta}
+                /> :
+                <DownloadComponent 
+                    meta={meta}
+                    token={token}
+                />
             }
-            {
-                loading ? (
-                    <div>
-                        Loading...
-                    </div>
-                ) : null
-            }
-        </div>
+            
+        </Container>
     );
 };
 
