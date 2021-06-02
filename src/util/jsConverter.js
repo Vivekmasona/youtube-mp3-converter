@@ -30,15 +30,16 @@ const jsConverter = async (link) => {
         fs.mkdirSync(converted_folder)
     }
     // making unique jwt token for storage
-    const token = jwt.sign({ _name: info['player_response']['videoDetails']['title'] }, process.env.AUTH_STRING);
-    const storage_location = path.join(converted_folder, `${token}.mp3`);
+    const meta = info['player_response']['videoDetails'];
+    const token = jwt.sign({ _id: meta['videoId'], _name: meta['title'] }, process.env.AUTH_STRING);
+    const storage_location = path.join(converted_folder, `${meta['videoId']}.mp3`);
 
     // downloading and converting to mp3
     const stream = ytdl.downloadFromInfo(info, {
         quality: 'highestaudio'
     });  
     const response = await ffmpegSync(stream, info, storage_location);
-    return { meta: info['player_response']['videoDetails'], token };
+    return { meta, token };
 };
 
 module.exports = jsConverter;

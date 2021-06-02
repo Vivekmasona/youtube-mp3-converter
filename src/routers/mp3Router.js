@@ -18,7 +18,6 @@ router.get('/', async (req, res) => {
 router.post('/convert', async (req, res) => {
     try {
         const link = req.body.link; 
-        console.log(req.body) 
         if(!link) {
             throw new Error('Link not provided!');
         }
@@ -40,10 +39,9 @@ router.post('/download', async (req, res) => {
     }
     let file_path;
     let decoded;
-    console.log(token)
     try {
         decoded = jwt.verify(token, process.env.AUTH_STRING);
-        file_path = path.join(CONVERTED_DIR, `${token}.mp3`);
+        file_path = path.join(CONVERTED_DIR, `${decoded._id}.mp3`);
         await Fs.access(file_path); 
     } catch (error) {
         res.status(400).send({ error: 'File not found on server', message: error.message });
