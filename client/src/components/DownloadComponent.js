@@ -55,12 +55,14 @@ const DownloadComponent = ({meta, token}) => {
             console.log(error);
             return;
         }
-        const filename =  response.headers['content-disposition'].split('filename=')[1];
+        const reg_expr = 'filename=\"(.*)\"';
+        const reg_result = response.headers['content-disposition'].match(reg_expr);
+        const filename =  reg_result[1];
 
         const url = window.URL.createObjectURL(new Blob([response.data]), { type: 'audio/mp3' });
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', filename.slice(1,-1));
+        link.setAttribute('download', filename);
         document.body.appendChild(link);
         link.click();
         link.remove();
