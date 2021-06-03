@@ -21,7 +21,6 @@ router.post('/convert', async (req, res) => {
         if(!link) {
             throw new Error('Link not provided!');
         }
-        
         const response = await jsConverter(link);
         res.send(response);
     } catch (error) {
@@ -31,32 +30,28 @@ router.post('/convert', async (req, res) => {
 
 // route to download a specific file from the server
 router.post('/download', async (req, res) => {
-    const CONVERTED_DIR = path.join(__dirname, '..', 'converted');
-    // token received from server
-    const token = req.body.token;
-    if(!token) {
-        res.status(400).send({ error: 'Token not provided!' });
-        return;
-    }
-    let file_path;
-    let decoded;
     try {
-        decoded = jwt.verify(token, process.env.AUTH_STRING);
-        file_path = path.join(CONVERTED_DIR, `${decoded._id}.mp3`);
-        await Fs.access(file_path); 
+        const token = req.body.token;
+        if(!token) {
+            throw new Error('Token not provided!');
+        }
+        const decoded = jwt.verify(token, process.env.AUTH_STRING);
+        
+        const CONVERTED_DIR = path.join(__dirname, '..', 'converted');
+        const file_path = path.join(CONVERTED_DIR, `${decoded._id}.mp3`);
+        const stat = fs.statSync(file_path);
+        res.writeHead(200, {
+            'Content-Disposition': contentDisposition(`${decoded._name}.mp3`),
+            'Content-Type': 'audio/mp3',
+            'Content-Length': stat.size,
+        });
+        const readStream = fs.createReadStream(file_path);
+        readStream.pipe(res);
     } catch (error) {
         res.status(400).send({ error: 'File not found on server', message: error.message });
         console.log(error)
         return;
     }
-    const stat = fs.statSync(file_path);
-    res.writeHead(200, {
-        'Content-Disposition': contentDisposition(`${decoded._name}.mp3`),
-        'Content-Type': 'audio/mp3',
-        'Content-Length': stat.size,
-    });
-    const readStream = fs.createReadStream(file_path);
-    readStream.pipe(res);
 });
 
 module.exports = router;
