@@ -4,9 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { green, red } from '@material-ui/core/colors';
 
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -79,7 +76,7 @@ const DownloadComponent = ({meta, token, removeComponent}) => {
 
         let filename;
         try {
-            const reg_expr = 'filename=\"(.*)\"';
+            const reg_expr = 'filename="(.*)"';
             const reg_result = response.headers['content-disposition'].match(reg_expr);
             filename =  reg_result[1];            
         } catch (error) {
@@ -103,6 +100,7 @@ const DownloadComponent = ({meta, token, removeComponent}) => {
                         className={classes.cover}
                         src={thumbnail}
                         title={title}
+                        alt="thumbnail"
                     />
                 </Grid>
                 <Grid item xs={8}>

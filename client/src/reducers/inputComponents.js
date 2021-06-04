@@ -31,7 +31,7 @@ const inputComponents = (state = initialState, action = {}) => {
             return {
                 ...state,
                 componentArray: state.componentArray.map((component, i) => {
-                    if(i == index) {
+                    if(i === index) {
                         return {
                             ...component,
                             token,
@@ -53,7 +53,7 @@ const inputComponents = (state = initialState, action = {}) => {
             return {
                 ...state,
                 componentArray: state.componentArray.map((component, i) => {
-                    if(i == index) {
+                    if(i === index) {
                         return {
                             ...component,
                             token: null,

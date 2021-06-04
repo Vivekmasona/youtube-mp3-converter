@@ -3,8 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { purple } from '@material-ui/core/colors';
@@ -27,14 +25,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const ConvertComponent = ({ token, setToken, setMeta, requestQueue, index }) => {
+const ConvertComponent = ({ token, requestQueue, index }) => {
     const [loading, setLoading] = useState(false);
     const [link, setLink] = useState('');
 
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const REQUEST_DELAY = 0;
+    const REQUEST_DELAY = 2;
 
     const onConvertClick = async (e) => {
         e.preventDefault();
