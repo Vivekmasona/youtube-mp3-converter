@@ -27,11 +27,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const ConvertComponent = ({ link, token, setLink, setToken, loading, setMeta, setLoading, requestQueue }) => {
+const ConvertComponent = ({ link, token, setLink, setToken, setMeta, requestQueue }) => {
     const classes = useStyles();
+    const [loading, setLoading] = useState(false);
 
     const REQUEST_DELAY = 2;
-    
+
     const onConvertClick = async (e) => {
         e.preventDefault();
 
@@ -39,15 +40,21 @@ const ConvertComponent = ({ link, token, setLink, setToken, loading, setMeta, se
             .then(({ data, error }) => {
                 setLoading(false);
                 if(error) {
-                    console.log(error);
-                    return;
+                    throw new Error(error.error);
                 }
-                setToken(data.token)
-                setMeta(data.meta)
+                setMeta(data.meta);
+                setToken(data.token);
             })
             .catch((err) => {
-                console.log(err)
-                setLoading(false)
+                console.log(err.message);
+                setLoading(false);
+                setMeta({
+                    title : 'Error!',
+                    thumbnail : 'https://uploads.sitepoint.com/wp-content/uploads/2015/12/1450973046wordpress-errors.png',
+                    description : err.message,
+                    error: true
+                });
+                setToken('ERROR_YOUTUBE_LINK_NOT_FOUND');
             });      
     };
 
@@ -58,9 +65,10 @@ const ConvertComponent = ({ link, token, setLink, setToken, loading, setMeta, se
             setTimeout(async () => {
                 await fn(e)
                 next();
-            }, N * 1000)
+            }, N * 1000);
         });
-    }
+    };
+
     return(
         <div className={classes.middle}>
             <Grid container spacing={3}>

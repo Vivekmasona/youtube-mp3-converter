@@ -19,31 +19,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const InputComponent = ({ requestQueue }) => {
+const InputComponent = ({ requestQueue, removeInput, index }) => {
     const [link, setLink] = useState('');
     const [token, setToken] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [meta, setMeta] = useState({});
 
     const classes = useStyles();
+
+    const removeComponent = () => {
+        removeInput(index);
+    }
 
     return(
         <Container className={classes.root}>
             {
                 !token ? 
                 <ConvertComponent 
-                    loading={loading}
                     token={token}
                     link={link}
                     setToken={setToken}
                     setLink={setLink}
-                    setLoading={setLoading}
                     setMeta={setMeta}
                     requestQueue={requestQueue}
                 /> :
                 <DownloadComponent 
                     meta={meta}
                     token={token}
+                    removeComponent={removeComponent}
                 />
             } 
         </Container>

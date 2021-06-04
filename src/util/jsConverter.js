@@ -19,7 +19,7 @@ const ffmpegSync = (stream, info, storage_location) => {
             .on("end", function() {
                 resolve({ success: true });
             });
-    })
+    });
 };
 
 const jsConverter = async (link) => {

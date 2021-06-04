@@ -30,19 +30,28 @@ const App = () => {
         next();
     });
 
-    const renderInputList = () => {
-        return inputList.map((input, index) => {
-            return(
-                <div key={index}>
-                    <InputComponent requestQueue={requestQueue}/>
-                </div>
-            );
-        })
+    const removeInput = (index) => {
+        console.log('removing index' + index)
+        setInputList(inputList.filter((_, i) => i !== index));
     }
 
     const addNewInput = (e) => {
         e.preventDefault();
         setInputList([...inputList, 0]);
+    }
+
+    const renderInputList = () => {
+        return inputList.map((input, index) => {
+            return(
+                <div key={index}>
+                    <InputComponent 
+                        requestQueue={requestQueue} 
+                        removeInput={removeInput}
+                        index={index}
+                    />
+                </div>
+            );
+        })
     }
 
     return(

@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { green } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
 
 import download from '../actions/download';
 
@@ -26,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flex: '1 0 auto',
         padding: theme.spacing(1)
+    },
+    contentHeader: {
+        display: 'flex',
+        justifyContent: 'space-between'
     },
     cover: {
         width: '100%',
@@ -45,19 +49,33 @@ const useStyles = makeStyles((theme) => ({
           backgroundColor: green[700],
         },
     },
+    red: {
+        color: theme.palette.getContrastText(red[500]),
+        backgroundColor: red[500],
+        '&:hover': {
+          backgroundColor: red[700],
+        },
+    },
 }));
 
-const DownloadComponent = ({meta, token}) => {
-    const { title, thumbnail, lengthSeconds } = meta;
-    const classes = useStyles();
+const DownloadComponent = ({meta, token, removeComponent}) => {
 
-    if(Object.keys(meta).length === 0) {
-        return null;
+    let { title, thumbnail, description } = meta;
+    const [loading, setLoading] = useState(false);
+
+    if(!meta.error) {
+        thumbnail = meta.thumbnail.thumbnails[0].url;
+        description = `Length: ${meta.lengthSeconds} seconds`;
     }
+
+    const classes = useStyles();
 
     const onDownloadClick = async (e) => {
         e.preventDefault();
+        setLoading(true);
         const { response, error } = await download(token);
+        setLoading(false);
+
         if(error) {
             console.log(error);
             return;
@@ -87,31 +105,44 @@ const DownloadComponent = ({meta, token}) => {
                 <Grid item xs={4}>
                     <img
                         className={classes.cover}
-                        src={thumbnail.thumbnails[0].url}
+                        src={thumbnail}
                         title={title}
                     />
                 </Grid>
                 <Grid item xs={8}>
                     <div className={classes.details}>
                         <div className={classes.content}>
-                            <Typography component="h6" variant="h6" noWrap>
-                                {title}
-                            </Typography>
+                            <div className={classes.contentHeader}>
+                                <Typography component="h6" variant="h6" noWrap>
+                                    {title}
+                                </Typography>
+                                <Button
+                                    variant="contained" 
+                                    className={classes.red}
+                                    size="small"
+                                    onClick={removeComponent}
+                                >
+                                    Close
+                                </Button>
+                            </div>
                             <Typography variant="subtitle2" color="textSecondary">
-                                Length: {lengthSeconds} seconds
+                                {description}
                             </Typography>
                         </div>
-                        <div className={classes.controls}>
-                            <Button 
-                                variant="contained" 
-                                className={classes.green}
-                                onClick={onDownloadClick}
-                                id="download-button"
-                                size="small"
-                            >
-                                Download
-                            </Button>
-                        </div>
+                        {
+                            token !== 'ERROR_YOUTUBE_LINK_NOT_FOUND' ? 
+                            <div className={classes.controls}>
+                                <Button 
+                                    variant="contained" 
+                                    className={classes.green}
+                                    onClick={onDownloadClick}
+                                    id="download-button"
+                                    size="small"
+                                >
+                                    { loading ? 'Loading...' : 'Download' }
+                                </Button>
+                            </div> : null
+                        }
                     </div>
                 </Grid>
             </Grid>
