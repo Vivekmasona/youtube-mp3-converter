@@ -10,7 +10,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-// import Zoom from '@material-ui/core/Zoom';
 
 
 import download from '../actions/download';
@@ -64,7 +63,6 @@ const DownloadComponent = ({meta, token, removeComponent}) => {
 
     let { title, thumbnail, description } = meta;
     const [loading, setLoading] = useState(false);
-    // const [stayIn, setStayIn] = useState(true); 
 
     const classes = useStyles();
 

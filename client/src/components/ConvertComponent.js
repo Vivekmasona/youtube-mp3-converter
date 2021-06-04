@@ -34,7 +34,7 @@ const ConvertComponent = ({ token, setToken, setMeta, requestQueue, index }) => 
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const REQUEST_DELAY = 2;
+    const REQUEST_DELAY = 0;
 
     const onConvertClick = async (e) => {
         e.preventDefault();
