@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import { green, red } from '@material-ui/core/colors';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,7 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { green, red } from '@material-ui/core/colors';
+// import Zoom from '@material-ui/core/Zoom';
+
 
 import download from '../actions/download';
 
@@ -62,11 +64,7 @@ const DownloadComponent = ({meta, token, removeComponent}) => {
 
     let { title, thumbnail, description } = meta;
     const [loading, setLoading] = useState(false);
-
-    if(!meta.error) {
-        thumbnail = meta.thumbnail.thumbnails[0].url;
-        description = `Length: ${meta.lengthSeconds} seconds`;
-    }
+    // const [stayIn, setStayIn] = useState(true); 
 
     const classes = useStyles();
 
@@ -130,7 +128,7 @@ const DownloadComponent = ({meta, token, removeComponent}) => {
                             </Typography>
                         </div>
                         {
-                            token !== 'ERROR_YOUTUBE_LINK_NOT_FOUND' ? 
+                            !meta.error ? 
                             <div className={classes.controls}>
                                 <Button 
                                     variant="contained" 

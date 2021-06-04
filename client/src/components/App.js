@@ -25,29 +25,33 @@ const App = () => {
     
     const [inputList, setInputList] = useState([0]);
     const classes = useStyles();
+    const dispatch = useDispatch();
+
+    const reduxStates = useSelector((state) => {
+        return {
+            componentArray: state.inputComponents.componentArray,
+        };
+    });
 
     const requestQueue = new Queue((next) => {
         next();
     });
 
-    const removeInput = (index) => {
-        console.log('removing index' + index)
-        setInputList(inputList.filter((_, i) => i !== index));
-    }
-
     const addNewInput = (e) => {
         e.preventDefault();
-        setInputList([...inputList, 0]);
+        dispatch({
+            type: 'ADD_NEW_INPUT'
+        });
     }
 
     const renderInputList = () => {
-        return inputList.map((input, index) => {
+        return reduxStates.componentArray.map((input, index) => {
             return(
                 <div key={index}>
                     <InputComponent 
                         requestQueue={requestQueue} 
-                        removeInput={removeInput}
                         index={index}
+                        inputObj={input}
                     />
                 </div>
             );

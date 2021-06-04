@@ -19,28 +19,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const InputComponent = ({ requestQueue, removeInput, index }) => {
-    const [link, setLink] = useState('');
-    const [token, setToken] = useState(null);
-    const [meta, setMeta] = useState({});
+const InputComponent = ({ requestQueue, index, inputObj }) => {
+
+    const { meta, token } = inputObj;
 
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     const removeComponent = () => {
-        removeInput(index);
-    }
+        dispatch({
+            type: 'DELETE_COMPONENT',
+            payload: {
+                index
+            }
+        });
+    };
 
     return(
         <Container className={classes.root}>
             {
-                !token ? 
+                inputObj.convert ? 
                 <ConvertComponent 
                     token={token}
-                    link={link}
-                    setToken={setToken}
-                    setLink={setLink}
-                    setMeta={setMeta}
                     requestQueue={requestQueue}
+                    index={index}
                 /> :
                 <DownloadComponent 
                     meta={meta}

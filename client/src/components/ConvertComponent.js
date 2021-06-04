@@ -27,9 +27,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const ConvertComponent = ({ link, token, setLink, setToken, setMeta, requestQueue }) => {
-    const classes = useStyles();
+const ConvertComponent = ({ token, setToken, setMeta, requestQueue, index }) => {
     const [loading, setLoading] = useState(false);
+    const [link, setLink] = useState('');
+
+    const classes = useStyles();
+    const dispatch = useDispatch();
 
     const REQUEST_DELAY = 2;
 
@@ -42,19 +45,25 @@ const ConvertComponent = ({ link, token, setLink, setToken, setMeta, requestQueu
                 if(error) {
                     throw new Error(error.error);
                 }
-                setMeta(data.meta);
-                setToken(data.token);
+                dispatch({
+                    type: 'CONVERSION_SUCCESSFUL',
+                    payload: {
+                        index,
+                        token: data.token,
+                        meta: data.meta
+                    }
+                });
             })
             .catch((err) => {
                 console.log(err.message);
                 setLoading(false);
-                setMeta({
-                    title : 'Error!',
-                    thumbnail : 'https://uploads.sitepoint.com/wp-content/uploads/2015/12/1450973046wordpress-errors.png',
-                    description : err.message,
-                    error: true
+                dispatch({
+                    type: 'CONVERSION_FAILED',
+                    payload: {
+                        index,
+                        err
+                    }
                 });
-                setToken('ERROR_YOUTUBE_LINK_NOT_FOUND');
             });      
     };
 
