@@ -83,6 +83,7 @@ const DownloadComponent = ({meta, token, removeComponent}) => {
         document.body.appendChild(link);
         link.click();
         link.remove();
+        removeComponent();
     }
 
     return(

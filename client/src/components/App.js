@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
+    },
+    fullWidth: {
+        width: '100%'
     }
 }));
 
@@ -46,7 +49,7 @@ const App = () => {
     const renderInputList = () => {
         return reduxStates.componentArray.map((input) => {
             return(
-                <div key={input.index}>
+                <div key={input.index} className={classes.fullWidth}>
                     <InputComponent 
                         requestQueue={requestQueue} 
                         index={input.index}
