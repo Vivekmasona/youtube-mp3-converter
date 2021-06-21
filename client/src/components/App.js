@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
     
-    const [inputList, setInputList] = useState([0]);
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -45,12 +44,12 @@ const App = () => {
     }
 
     const renderInputList = () => {
-        return reduxStates.componentArray.map((input, index) => {
+        return reduxStates.componentArray.map((input) => {
             return(
-                <div key={index}>
+                <div key={input.index}>
                     <InputComponent 
                         requestQueue={requestQueue} 
-                        index={index}
+                        index={input.index}
                         inputObj={input}
                     />
                 </div>

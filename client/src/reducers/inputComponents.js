@@ -1,14 +1,18 @@
-const default_obj = {
-    convert: true,
-    meta: null,
-    token: null,
-    link: ''
+const formDefaultObj = (index) => {
+    return {
+        convert: true,
+        meta: null,
+        token: null,
+        link: '',
+        index
+    };
 };
 
 const initialState = {
     componentArray: [
-        default_obj
-    ]
+        formDefaultObj(0)
+    ],
+    num: 1
 };
 
 const inputComponents = (state = initialState, action = {}) => {
@@ -18,8 +22,9 @@ const inputComponents = (state = initialState, action = {}) => {
                 ...state,
                 componentArray: [
                     ...state.componentArray,
-                    default_obj
-                ]
+                    formDefaultObj(state.num)
+                ],
+                num: state.num + 1
             };
         }
         case 'CONVERSION_SUCCESSFUL': {
@@ -30,8 +35,8 @@ const inputComponents = (state = initialState, action = {}) => {
             } = action.payload;
             return {
                 ...state,
-                componentArray: state.componentArray.map((component, i) => {
-                    if(i === index) {
+                componentArray: state.componentArray.map((component) => {
+                    if(component.index === index) {
                         return {
                             ...component,
                             token,
@@ -52,8 +57,8 @@ const inputComponents = (state = initialState, action = {}) => {
             const { err, index } = action.payload;
             return {
                 ...state,
-                componentArray: state.componentArray.map((component, i) => {
-                    if(i === index) {
+                componentArray: state.componentArray.map((component) => {
+                    if(component.index === index) {
                         return {
                             ...component,
                             token: null,
@@ -74,7 +79,7 @@ const inputComponents = (state = initialState, action = {}) => {
             const { index } = action.payload;
             return {
                 ...state,
-                componentArray: state.componentArray.filter((_, i) => i !== index)
+                componentArray: state.componentArray.filter((component) => component.index !== index)
             }
         }
         default: {
