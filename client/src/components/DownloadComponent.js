@@ -74,15 +74,8 @@ const DownloadComponent = ({meta, token, removeComponent}) => {
             return;
         }
 
-        let filename;
-        try {
-            const reg_expr = 'filename="(.*)"';
-            const reg_result = response.headers['content-disposition'].match(reg_expr);
-            filename =  reg_result[1];            
-        } catch (error) {
-            filename = title + '.mp3';
-        }
-        
+        const filename = title + '.mp3';
+
         const url = window.URL.createObjectURL(new Blob([response.data]), { type: 'audio/mp3' });
         const link = document.createElement('a');
         link.href = url;
