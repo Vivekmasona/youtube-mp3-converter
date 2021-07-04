@@ -127,7 +127,7 @@ const DownloadComponent = ({meta, token, removeComponent}) => {
                                     id="download-button"
                                     size="small"
                                 >
-                                    { loading ? 'Loading...' : 'Download' }
+                                    { loading ? 'Downloading...' : 'Download' }
                                 </Button>
                             </div> : null
                         }
