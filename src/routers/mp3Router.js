@@ -10,12 +10,12 @@ const jsConverter = require('../util/jsConverter');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+app.get('/', async (req, res) => {
     res.send({ ok: "ok" });
 });
 
 // route to send youtube link and download it on local server
-router.post('/convert', async (req, res) => {
+app.get('/convert', async (req, res) => {
     try {
         const link = req.body.link; 
         if(!link) {
@@ -29,7 +29,7 @@ router.post('/convert', async (req, res) => {
 });
 
 // route to download a specific file from the server
-router.post('/download', async (req, res) => {
+app.get('/download', async (req, res) => {
     try {
         const token = req.body.token;
         if(!token) {
